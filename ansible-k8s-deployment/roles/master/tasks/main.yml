@@ -1,0 +1,36 @@
+---
+# tasks file for master role
+- name: Initialize the Kubernetes cluster with kubeadm
+  ansible.builtin.shell: "kubeadm init --apiserver-advertise-address={{ master_ip }} --pod-network-cidr={{ pod_network_cidr }} --upload-certs"
+  args:
+    creates: /etc/kubernetes/admin.conf
+
+- name: Setup kubectl for the root user
+  ansible.builtin.file:
+    path: /root/.kube
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: Copy admin.conf to user's kube config
+  ansible.builtin.copy:
+    src: /etc/kubernetes/admin.conf
+    dest: /root/.kube/config
+    remote_src: yes
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Install Calico network CNI
+  ansible.builtin.shell: "kubectl apply -f https://raw.githubusercontent.com/projectcalico/calico/v3.27.3/manifests/calico.yaml"
+  args:
+    creates: /etc/cni/net.d/10-calico.conflist
+
+- name: Generate join command
+  ansible.builtin.command: kubeadm token create --print-join-command
+  register: join_command_raw
+
+- name: Store join command
+  ansible.builtin.set_fact:
+    join_command: "{{ join_command_raw.stdout }}"

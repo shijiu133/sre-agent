@@ -1,0 +1,26 @@
+---
+- name: 1. Configure all nodes with common settings
+  hosts: all
+  become: true
+  roles:
+    - common
+
+- name: 2. Deploy Kubernetes master node
+  hosts: masters
+  become: true
+  roles:
+    - master
+
+- name: 3. Deploy Kubernetes worker nodes
+  hosts: workers
+  become: true
+  roles:
+    - worker
+    
+- name: 4. Label worker nodes from master
+  hosts: masters
+  become: true
+  tasks:
+    - name: Apply worker role label to each worker node
+      ansible.builtin.command: "kubectl label node {{ item }} node-role.kubernetes.io/worker=worker --overwrite"
+      loop: "{{ groups['workers'] }}"

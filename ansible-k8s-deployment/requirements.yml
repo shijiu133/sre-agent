@@ -1,0 +1,8 @@
+---
+collections:
+  - name: ansible.posix
+    version: ">=1.5.4"  # 指定一个版本范围，保证稳定性
+  - name: community.general
+    version: ">=8.5.0"
+
+

@@ -1,0 +1,20 @@
+# 系统/本地配置（必排除）
+anaconda-ks.cfg
+.ansible/
+.cache/
+.config/
+.docker/
+.kube/
+.ssh/
+
+# 临时/日志文件
+*.log
+*.swp
+.DS_Store
+crash-app.yaml  # 测试用 YAML，按需保留可删除此行
+
+# Go 编译产物（无需推送）
+go/bin/
+go/pkg/
+*.exe
+*.exe~
