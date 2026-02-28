@@ -18,3 +18,12 @@ go/bin/
 go/pkg/
 *.exe
 *.exe~
+.bash_history
+.bash_logout
+.bash_profile
+.bashrc
+.cshrc
+.gitconfig
+.lesshst
+.tcshrc
+.viminfo
